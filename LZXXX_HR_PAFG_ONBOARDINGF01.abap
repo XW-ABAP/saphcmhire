@@ -86,6 +86,13 @@ FORM frm_check_data  TABLES   it_sapitab
     DATA:ls_movenew LIKE LINE OF lt_tbmove.
     DATA:lt_movenew LIKE TABLE OF ls_movenew.
 
+
+*      DELETE lt_tbmove WHERE znumber < 5551 OR znumber > 7000.  "Even numbers are assigned to odd numbers
+    APPEND LINES OF lt_tbmove TO lt_movenew.
+    DELETE lt_movenew WHERE znumber < 5551 OR znumber > 7000.
+    SORT lt_movenew BY fnsource.
+    DELETE ADJACENT DUPLICATES FROM lt_movenew COMPARING fnsource.
+
     LOOP AT it_sapitab ASSIGNING <ls_wa>.
       LOOP AT lt_tbmove ASSIGNING FIELD-SYMBOL(<ls_tbmove>).
         IF <ls_tbmove>-znumber >= 9990.  "sepcial case change data Forcibly substituting values
@@ -120,12 +127,10 @@ FORM frm_check_data  TABLES   it_sapitab
           UNASSIGN <lv_target>.
         ENDIF.
       ENDLOOP.
-
-
-      DELETE lt_tbmove WHERE znumber < 5551 OR znumber > 7000.  "Even numbers are assigned to odd numbers
-      APPEND LINES OF lt_tbmove TO lt_movenew.
-      SORT lt_movenew BY fnsource.
-      DELETE ADJACENT DUPLICATES FROM lt_movenew COMPARING fnsource.
+*      DELETE lt_tbmove WHERE znumber < 5551 OR znumber > 7000.  "Even numbers are assigned to odd numbers
+*      APPEND LINES OF lt_tbmove TO lt_movenew.
+*      SORT lt_movenew BY fnsource.
+*      DELETE ADJACENT DUPLICATES FROM lt_movenew COMPARING fnsource.
       LOOP AT lt_movenew ASSIGNING FIELD-SYMBOL(<ls_mvoenew>).
         CLEAR:lv_shu.
         ASSIGN COMPONENT <ls_mvoenew>-fnsource OF STRUCTURE <ls_wa> TO <lv_source>.
@@ -134,20 +139,16 @@ FORM frm_check_data  TABLES   it_sapitab
           IF  lv_shu MOD 2 = 1.
             DATA(lv_soo) = <ls_tbmove>-sntarget.
             CONDENSE lv_soo NO-GAPS.
-          ENDIF.
-          IF lv_shu MOD 2 = 0.
+          ELSEIF lv_shu MOD 2 = 0.
             DATA(lv_too) = <ls_tbmove>-sntarget.
             CONDENSE lv_too NO-GAPS.
             REPLACE ALL OCCURRENCES OF lv_soo IN <lv_source> WITH lv_too.
           ENDIF.
         ENDLOOP.
-
         IF <lv_source> IS ASSIGNED.
           UNASSIGN <lv_source>.
         ENDIF.
       ENDLOOP.
-
-
     ENDLOOP.
   ENDIF.
   LOOP AT it_sapitab ASSIGNING <ls_wa>.
@@ -572,9 +573,10 @@ FORM frm_update_log  TABLES   it_return TYPE zXXX_hr_pa_tab_return
 
   CALL METHOD /ui2/cl_json=>serialize
     EXPORTING
-      data   = it_return
+      data     = it_return[]
+      compress = abap_true
     RECEIVING
-      r_json = DATA(lv_jsonnew).
+      r_json   = DATA(lv_jsonnew).
 
   TRY.
       CALL METHOD cl_abap_codepage=>convert_to
