@@ -359,43 +359,24 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
     ENDIF.
-    CLEAR:lv_orgeh.
-    IF lv_orgeh <> <ls_p0001>-orgeh.
-      APPEND INITIAL LINE TO ct_message ASSIGNING <ls_message>.
-      <ls_message>-msgty = 'E'.
-      <ls_message>-msgtx = TEXT-004. "Organization positions do not match
-      <ls_message>-fieldname = 'ORGEH'.
-      SELECT SINGLE znsapfield
-        INTO <ls_message>-znsapfield
-        FROM zXXX_hr_pa_tpint
-        WHERE infty      = pv_infty AND
-              fieldname  = <ls_p0001>-orgeh AND
-              znsapfield <> ''.
+*    CLEAR:lv_orgeh.
+*    IF lv_orgeh <> <ls_p0001>-orgeh.
+*      APPEND INITIAL LINE TO ct_message ASSIGNING <ls_message>.
+*      <ls_message>-msgty = 'E'.
+*      <ls_message>-msgtx = TEXT-004. "Organization positions do not match
+*      <ls_message>-fieldname = 'ORGEH'.
+*      SELECT SINGLE znsapfield
+*        INTO <ls_message>-znsapfield
+*        FROM zXXX_hr_pa_tpint
+*        WHERE infty      = pv_infty AND
+*              fieldname  = <ls_p0001>-orgeh AND
+*              znsapfield <> ''.
+*
+*    ENDIF.
 
-    ENDIF.
-
-    SELECT SINGLE bukrs INTO @DATA(lv_bukrs)
-       FROM  t500p
-       WHERE persa = @<ls_p0001>-werks
-         AND molga = '28'.
-    IF sy-subrc = 0.
-      <ls_p0001>-bukrs = lv_bukrs.
-    ELSE.
-      APPEND INITIAL LINE TO ct_message ASSIGNING <ls_message>.
-      <ls_message>-msgty = 'E'.
-      <ls_message>-msgtx = TEXT-005. "Personnel Area and Company Code do not match
-      <ls_message>-fieldname = 'BUKRS'.
-      SELECT SINGLE znsapfield
-        INTO <ls_message>-znsapfield
-        FROM zXXX_hr_pa_tpint
-        WHERE infty      = pv_infty AND
-              fieldname  = <ls_message>-fieldname AND
-              znsapfield <> ''.
-    ENDIF.
-    CLEAR:lv_bukrs.
 
     SELECT SINGLE objid FROM hrp1001 INTO @DATA(lv_stell) WHERE plvar = '01'
-                                                         AND otype = 'O'
+                                                         AND otype = 'C'
                                                          AND istat = '1'
                                                          AND begda <= @sy-datum
                                                          AND endda >= @sy-datum
@@ -429,11 +410,11 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
                                                          AND sclas = 'K'
                                                          AND objid = @<ls_p0001>-plans.
     IF sy-subrc = 0.
-      <ls_p0001>-kostl = lv_kostl.
+*      <ls_p0001>-kostl = lv_kostl.
     ELSE.
       APPEND INITIAL LINE TO ct_message ASSIGNING <ls_message>.
       <ls_message>-msgty = 'E'.
-      <ls_message>-msgtx = TEXT-006. "Position and Job do not match
+      <ls_message>-msgtx = TEXT-016. "Position and cost center do not match
       <ls_message>-fieldname = 'KOSTL'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
@@ -443,6 +424,40 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
               znsapfield <> ''.
     ENDIF.
     CLEAR:lv_kostl.
+
+    SELECT SINGLE persa FROM hrp1008 INTO @DATA(lv_persa) WHERE plvar = '01'
+                                                         AND otype = 'S'
+                                                         AND istat = '1'
+                                                         AND begda <= @sy-datum
+                                                         AND endda >= @sy-datum
+                                                         AND objid = @<ls_p0001>-plans.
+    IF sy-subrc = 0.
+      IF <ls_p0001>-werks IS INITIAL.
+        <ls_p0001>-werks = lv_persa.
+      ENDIF.
+    ENDIF.
+    CLEAR:lv_persa.
+
+
+    SELECT SINGLE bukrs INTO @DATA(lv_bukrs)
+     FROM  t500p
+     WHERE persa = @<ls_p0001>-werks
+       AND molga = '28'.
+    IF sy-subrc = 0.
+      <ls_p0001>-bukrs = lv_bukrs.
+    ELSE.
+      APPEND INITIAL LINE TO ct_message ASSIGNING <ls_message>.
+      <ls_message>-msgty = 'E'.
+      <ls_message>-msgtx = TEXT-005. "Personnel Area and Company Code do not match
+      <ls_message>-fieldname = 'BUKRS'.
+      SELECT SINGLE znsapfield
+        INTO <ls_message>-znsapfield
+        FROM zXXX_hr_pa_tpint
+        WHERE infty      = pv_infty AND
+              fieldname  = <ls_message>-fieldname AND
+              znsapfield <> ''.
+    ENDIF.
+    CLEAR:lv_bukrs.
   ENDIF.
 ENDFORM.
 
