@@ -3,7 +3,7 @@ FUNCTION zXXX_hr_pafm_dataonload.
 *"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(IV_JSON) TYPE  STRING
-*"     VALUE(IV_VERSION) TYPE  ZXXX_HR_PA_E_ZVERSION OPTIONAL
+*"     VALUE(IV_VERSION) TYPE  ZXXX_HR_PA_E_ZVERSION DEFAULT 'SAP'
 *"     VALUE(IV_MOLGA) TYPE  VIEKN DEFAULT '28'
 *"  EXPORTING
 *"     VALUE(EV_JSON) TYPE  STRING
@@ -12,8 +12,8 @@ FUNCTION zXXX_hr_pafm_dataonload.
   DATA:lt_hirereturn   TYPE hrpad_return_tab,
        lt_hirepakeytab TYPE hrpad_bapipakey_tab,
        lv_ok           TYPE boole_d.
-  DATA:ls_p0006 TYPE p0006,
-       ls_p0022 TYPE p0022.
+*  DATA:ls_p0006 TYPE p0006,
+*       ls_p0022 TYPE p0022.
   DATA lv_msgty TYPE msgty.
   DATA:lv_msgtx TYPE msgtx.
   TYPES: BEGIN OF ts_s_data,
@@ -22,7 +22,7 @@ FUNCTION zXXX_hr_pafm_dataonload.
    ztable TYPE zXXX_hr_pa_tab_data.
   TYPES:       END OF ts_s_data.
 
-  TYPES:tt_s_data TYPE TABLE OF ts_s_data.
+  TYPES:tt_s_data TYPE STANDARD TABLE OF ts_s_data.
   FIELD-SYMBOLS:<lt_itab> TYPE STANDARD TABLE,
                 <ls_itab> TYPE any.
   FIELD-SYMBOLS:<lt_sapitab> TYPE STANDARD TABLE,
@@ -53,19 +53,22 @@ FUNCTION zXXX_hr_pafm_dataonload.
      FROM zXXX_hr_pa_tplog
      INTO TABLE @DATA(lt_tplogfind)
      FOR ALL ENTRIES IN @lt_data
-     WHERE guid = @lt_data-guid AND
-           msgty = 'S'.
-  IF sy-subrc = 0.
+     WHERE guid = @lt_data-guid.
+
+  SORT lt_tplogfind BY guid.
+
+  LOOP AT lt_tplogfind  ASSIGNING FIELD-SYMBOL(<ls_tplogfind>) WHERE msgty = 'S'.
+    APPEND INITIAL LINE TO gt_return ASSIGNING FIELD-SYMBOL(<ls_return>).
+    <ls_return>-guid = <ls_tplogfind>-guid.
+    APPEND INITIAL LINE TO <ls_return>-ztable ASSIGNING FIELD-SYMBOL(<ls_ztablereturn>).
+    <ls_ztablereturn>-fieldname = 'GUID'.
+    <ls_ztablereturn>-znsapfield = 'GUID'.
+    <ls_ztablereturn>-msgty = 'E'.
     lv_msgtx = TEXT-015.
-    LOOP AT lt_tplogfind  ASSIGNING FIELD-SYMBOL(<ls_tplogfind>).
-      APPEND INITIAL LINE TO gt_return ASSIGNING FIELD-SYMBOL(<ls_return>).
-      <ls_return>-guid = <ls_tplogfind>-guid.
-      APPEND INITIAL LINE TO <ls_return>-ztable ASSIGNING FIELD-SYMBOL(<ls_ztablereturn>).
-      <ls_ztablereturn>-fieldname = 'GUID'.
-      <ls_ztablereturn>-znsapfield = 'GUID'.
-      <ls_ztablereturn>-msgty = 'E'.
-      <ls_ztablereturn>-msgtx = lv_msgtx.
-    ENDLOOP.
+    <ls_ztablereturn>-msgtx = lv_msgtx.
+  ENDLOOP.
+
+  IF gt_return[] IS NOT INITIAL.
     CALL METHOD /ui2/cl_json=>serialize
       EXPORTING
         data   = gt_return
@@ -101,8 +104,17 @@ FUNCTION zXXX_hr_pafm_dataonload.
     "
     APPEND INITIAL LINE TO lt_tplog ASSIGNING FIELD-SYMBOL(<ls_tplog>).
     <ls_tplog>-guid = <ls_data>-guid.
-    <ls_tplog>-sdate = sy-datum.
-    <ls_tplog>-stime = sy-uzeit.
+
+*    CLEAR:ls_logfind.
+    READ TABLE lt_tplogfind INTO DATA(ls_logfind) WITH KEY guid = <ls_data>-guid BINARY SEARCH.
+    IF sy-subrc = 0.
+      <ls_tplog>-idate = sy-datum.
+      <ls_tplog>-itime = sy-uzeit.
+    ELSE.
+      <ls_tplog>-sdate = sy-datum.
+      <ls_tplog>-stime = sy-uzeit.
+    ENDIF.
+
     <ls_tplog>-data = lv_dataxstring.
     CLEAR:lv_dataxstring.
   ENDLOOP.
@@ -115,10 +127,6 @@ FUNCTION zXXX_hr_pafm_dataonload.
       ROLLBACK WORK.
       RETURN.
     ENDIF.
-  ENDIF.
-
-  IF iv_version IS INITIAL.
-    iv_version = 'SAP'.
   ENDIF.
 
   SELECT
@@ -135,7 +143,7 @@ FUNCTION zXXX_hr_pafm_dataonload.
     INTO TABLE @DATA(lt_tpint)
     WHERE infty      <> '' AND
           znsapfield <> '' AND
-          zversion   = @iv_version.
+          zversion   = @iv_version.                     "#EC CI_NOFIRST
 
   LOOP AT  lt_data ASSIGNING <ls_data>.
     "A GUID corresponds to a person data
@@ -151,7 +159,7 @@ FUNCTION zXXX_hr_pafm_dataonload.
 *      One type of information to get once
       CLEAR:lt_message.
 
-      CALL FUNCTION 'ZXXX_HR_PAFM_DATATOPRELP_V0001'
+      CALL FUNCTION 'ZXXX_HR_PAFM_DATATOPRELP'
         EXPORTING
           iv_infty   = <ls_ztable>-infty
           iv_data    = <ls_ztable>-data
@@ -168,12 +176,28 @@ FUNCTION zXXX_hr_pafm_dataonload.
                                    USING <ls_ztable>-infty
                                          <ls_data>-guid.
       ENDIF.
-    ENDLOOP.
 
-    IF lt_return IS NOT INITIAL.
-      APPEND LINES OF lt_return TO gt_return.
-      CLEAR:lt_return.
-      EXIT.
+
+      IF lt_return IS NOT INITIAL.
+        APPEND LINES OF lt_return TO gt_return.
+        CLEAR:lt_return.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+    IF gt_return IS NOT INITIAL.
+      lv_msgty = 'E'.
+      lv_msgtx = TEXT-013.
+
+      PERFORM frm_update_log TABLES gt_return
+                             USING <ls_data>-guid
+                                   lv_msgty
+                                   lv_msgtx.
+      CALL METHOD /ui2/cl_json=>serialize
+        EXPORTING
+          data   = gt_return
+        RECEIVING
+          r_json = ev_json.
+      CONTINUE.
     ENDIF.
 
     DELETE lt_prelp WHERE infty = '0000'.
@@ -223,7 +247,7 @@ FUNCTION zXXX_hr_pafm_dataonload.
     CALL FUNCTION 'HR_PAD_HIRE_EMPLOYEE'
       EXPORTING
         employeenumber  = gv_pernr
-*       referencepernr  = gv_rfpnr
+        referencepernr  = gv_rfpnr
         hiringdate      = gv_begda
         actiontype      = gv_massn
         reasonforaction = gv_massg
@@ -239,13 +263,44 @@ FUNCTION zXXX_hr_pafm_dataonload.
     IF lv_ok IS INITIAL.
       APPEND INITIAL LINE TO gt_return ASSIGNING <ls_return>.
       <ls_return>-guid = <ls_data>-guid.
-      LOOP AT lt_hirereturn ASSIGNING FIELD-SYMBOL(<ls_hirereturn>).
+      LOOP AT lt_hirereturn ASSIGNING FIELD-SYMBOL(<ls_hirereturn>) WHERE type CA 'AEX'.
         APPEND INITIAL LINE TO <ls_return>-ztable ASSIGNING <ls_ztablereturn>.
         MESSAGE ID <ls_hirereturn>-id TYPE <ls_hirereturn>-type  NUMBER <ls_hirereturn>-number
         WITH <ls_hirereturn>-message_v1
             <ls_hirereturn>-message_v2
             <ls_hirereturn>-message_v3
             <ls_hirereturn>-message_v4 INTO <ls_ztablereturn>-msgtx.
+
+        LOOP AT <ls_hirereturn>-field_list[] ASSIGNING FIELD-SYMBOL(<ls_field_list>).
+
+          IF <ls_field_list> IS NOT INITIAL.
+
+            IF <ls_field_list> CA '-'.
+              SPLIT <ls_field_list> AT '-' INTO DATA(lv_infty1) DATA(lv_field1).
+              REPLACE ALL OCCURRENCES OF 'P' IN lv_infty1 WITH ''.
+              READ TABLE lt_tpint INTO DATA(ls_tpint) WITH KEY infty = lv_infty1
+                                                               fieldname = lv_field1.
+              IF sy-subrc = 0.
+                <ls_ztablereturn>-fieldname = lv_field1.
+                <ls_ztablereturn>-znsapfield = ls_tpint-znsapfield.
+              ENDIF.
+            ELSE.
+              READ TABLE lt_tpint INTO ls_tpint WITH KEY
+                                                            fieldname = <ls_field_list>.
+              IF sy-subrc = 0.
+                <ls_ztablereturn>-fieldname = <ls_field_list>.
+                <ls_ztablereturn>-znsapfield = ls_tpint-znsapfield.
+              ENDIF.
+            ENDIF.
+
+            CLEAR:ls_tpint,
+                  lv_infty1,
+                  lv_field1.
+
+          ENDIF.
+          <ls_ztablereturn>-msgtx = <ls_ztablereturn>-msgtx && | |  && <ls_field_list>.
+        ENDLOOP.
+
         <ls_ztablereturn>-msgty = 'E'.
       ENDLOOP.
 
