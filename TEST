@@ -1,0 +1,250 @@
+FUNCTION ztest_fm_0004.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(IT_P0000) TYPE  P0000_TAB
+*"     REFERENCE(IT_P0001) TYPE  P0001_TAB
+*"     REFERENCE(IT_P0002) TYPE  P0002_TAB OPTIONAL
+*"     REFERENCE(IT_P0006) TYPE  P0006_TAB OPTIONAL
+*"     REFERENCE(IT_P0007) TYPE  P0007_TAB OPTIONAL
+*"     REFERENCE(IT_P0009) TYPE  P0009_TAB OPTIONAL
+*"     REFERENCE(IT_P0016) TYPE  P0016_TAB OPTIONAL
+*"     REFERENCE(IT_P0021) TYPE  ZBBB_HR_TAB_P0021 OPTIONAL
+*"     REFERENCE(IT_P0022) TYPE  P12_P0022_TAB OPTIONAL
+*"     REFERENCE(IT_P0023) TYPE  P0023_TAB OPTIONAL
+*"     REFERENCE(IT_P0041) TYPE  P0041_TAB OPTIONAL
+*"     REFERENCE(IT_P0105) TYPE  P0105_TBL OPTIONAL
+*"     REFERENCE(IT_P0185) TYPE  P0185_TAB OPTIONAL
+*"     REFERENCE(IT_P0529) TYPE  ZTT_P0529 OPTIONAL
+*"     REFERENCE(IT_P9507) TYPE  ZTT_P9507 OPTIONAL
+*"     REFERENCE(IV_FLAG) TYPE  FLAG DEFAULT ' '
+*"----------------------------------------------------------------------
+
+
+  TYPES: BEGIN OF ts_s_data,
+           guid TYPE zBBB_hr_pa_e_guid.
+  TYPES:
+   ztable TYPE zBBB_hr_pa_tab_data.
+  TYPES:       END OF ts_s_data.
+  TYPES:tt_s_data TYPE TABLE OF ts_s_data.
+  DATA:lv_json       TYPE string,
+       lv_jsonreturn TYPE string.
+  DATA:lt_data TYPE tt_s_data.
+
+  APPEND INITIAL LINE TO lt_data ASSIGNING FIELD-SYMBOL(<ls_data>).
+  <ls_data>-guid = 'guid0000000000000000000000099'.
+  IF it_p0000 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING FIELD-SYMBOL(<ls_ztable>).
+    <ls_ztable>-infty = '0000'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data           = it_p0000
+        compress       = abap_true
+        numc_as_string = 'X'
+      RECEIVING
+        r_json         = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0001 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0001'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data     = it_p0001
+        compress = abap_true
+      RECEIVING
+        r_json   = <ls_ztable>-data.
+  ENDIF.
+
+
+  IF it_p0002 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0002'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data     = it_p0002
+        compress = abap_true
+      RECEIVING
+        r_json   = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0006 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0006'.
+
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0006'.
+
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data     = it_p0006
+        compress = abap_true
+      RECEIVING
+        r_json   = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0007 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0007'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0007
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+
+  IF it_p0009 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0009'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0009
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0016 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0016'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0016
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0021 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0021'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0021
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0022 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0022'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0022
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0023 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0023'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0023
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0041 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0041'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0041
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+
+  IF it_p0105 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0105'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0105
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0185 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0185'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0185
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p0529 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '0529'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p0529
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF it_p9507 IS NOT INITIAL.
+    APPEND INITIAL LINE TO <ls_data>-ztable ASSIGNING <ls_ztable>.
+    <ls_ztable>-infty = '9507'.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = it_p9507
+      RECEIVING
+        r_json = <ls_ztable>-data.
+  ENDIF.
+
+  IF lt_data IS NOT INITIAL.
+    CALL METHOD /ui2/cl_json=>serialize
+      EXPORTING
+        data   = lt_data
+      RECEIVING
+        r_json = lv_json.
+    IF iv_flag = 'X'.
+      CALL FUNCTION 'ZBBB_HR_PAFM_DATAONLOAD' DESTINATION 'BHI'
+        EXPORTING
+          iv_json    = lv_json
+          iv_version = 'SAP'
+        IMPORTING
+          ev_json    = lv_jsonreturn.
+    ELSE.
+      CALL FUNCTION 'ZBBB_HR_PAFM_DATAONLOAD'
+        EXPORTING
+          iv_json    = lv_json
+          iv_version = 'SAP'
+        IMPORTING
+          ev_json    = lv_jsonreturn.
+    ENDIF.
+  ENDIF.
+
+  IF lv_jsonreturn IS NOT INITIAL.
+    CALL METHOD cl_demo_output=>display_json
+      EXPORTING
+        json = lv_jsonreturn.
+
+  ENDIF.
+
+ENDFUNCTION.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
