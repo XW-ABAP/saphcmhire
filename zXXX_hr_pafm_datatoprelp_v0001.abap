@@ -1,17 +1,17 @@
-FUNCTION zXXX_hr_pafm_datatoprelp.
-*"----------------------------------------------------------------------
+FUNCTION zDDD_hr_pafm_datatoprelp.
+*"--------------------------------------------------------------------
 *"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(IV_INFTY) TYPE  INFTY
 *"     VALUE(IV_DATA) TYPE  STRING
 *"     VALUE(IV_MOLGA) TYPE  VIEKN DEFAULT '28'
-*"     VALUE(IV_VERSION) TYPE  ZXXX_HR_PA_E_ZVERSION OPTIONAL
+*"     VALUE(IV_VERSION) TYPE  ZDDD_HR_PA_E_ZVERSION OPTIONAL
 *"  EXPORTING
 *"     REFERENCE(ET_PRELP) TYPE  PRELP_TAB
-*"     REFERENCE(ET_MESSAGE) TYPE  ZXXX_HR_PA_TAB_MESSAGE
+*"     REFERENCE(ET_MESSAGE) TYPE  ZDDD_HR_PA_TAB_MESSAGE
 *"  TABLES
-*"      IT_TPINT STRUCTURE  ZXXX_HR_PA_TPINT OPTIONAL
-*"----------------------------------------------------------------------
+*"      IT_TPINT STRUCTURE  ZDDD_HR_PA_TPINT OPTIONAL
+*"--------------------------------------------------------------------
   DATA:lv_message    TYPE string,
        lv_messageall TYPE string,
        ls_tpintnew   LIKE LINE OF it_tpint,
@@ -23,7 +23,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
        lt_tpintfind  LIKE TABLE OF  ls_tpintfind,
        lv_tabname    TYPE tabname,
        lt_prelp      TYPE  prelp_tab,
-       lt_message    TYPE zXXX_hr_pa_tab_message,
+       lt_message    TYPE zDDD_hr_pa_tab_message,
        lt_comp       TYPE cl_abap_structdescr=>component_table,
        ls_comp       LIKE LINE OF lt_comp,
        lr_line       TYPE REF TO data,
@@ -93,7 +93,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
         lr_struc = cl_abap_structdescr=>create( lt_comp ).
       CATCH cx_sy_struct_attributes INTO DATA(lr_cx_sturct).
         lv_message = lr_cx_sturct->get_text( ).
-*            MESSAGE e000(zXXX_hr_py_pay0001) WITH lv_message.
+*            MESSAGE e000(zDDD_hr_py_pay0001) WITH lv_message.
         lv_messageall = lv_messageall && lv_message.
     ENDTRY.
 
@@ -108,7 +108,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
             p_result     = lr_table.
       CATCH cx_sy_table_creation INTO DATA(lr_cx_table).
         lv_message = lr_cx_table->get_text( ).
-*            MESSAGE e000(zXXX_hr_py_pay0001) WITH lv_message.
+*            MESSAGE e000(zDDD_hr_py_pay0001) WITH lv_message.
         lv_messageall = lv_messageall && lv_message.
     ENDTRY.
 
@@ -204,7 +204,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
           CATCH cx_sy_struct_attributes INTO lr_cx_sturct.
             lv_message = lr_cx_sturct->get_text( ).
             lv_messageall = lv_messageall && lv_message.
-*            MESSAGE e000(zXXX_hr_py_pay0001) WITH lv_message.
+*            MESSAGE e000(zDDD_hr_py_pay0001) WITH lv_message.
         ENDTRY.
 
 *Generate table type dynamically
@@ -218,7 +218,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
                 p_result     = lr_table.
           CATCH cx_sy_table_creation INTO lr_cx_table.
             lv_message = lr_cx_table->get_text( ).
-*            MESSAGE e000(zXXX_hr_py_pay0001) WITH lv_message.
+*            MESSAGE e000(zDDD_hr_py_pay0001) WITH lv_message.
             lv_messageall = lv_messageall && lv_message.
         ENDTRY.
 
@@ -258,7 +258,7 @@ FUNCTION zXXX_hr_pafm_datatoprelp.
             znumber,
             fnsource,
             sntarget
-          FROM zXXX_hr_pa_move
+          FROM zDDD_hr_pa_move
             WHERE infty = @iv_infty
               AND zversion = @iv_version
               AND fnsource = @<ls_tpintnew>-fieldname
