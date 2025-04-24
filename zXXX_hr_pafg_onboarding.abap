@@ -1,9 +1,9 @@
-FUNCTION zDDD_hr_pafm_dataonload.
+FUNCTION zXXX_hr_pafm_dataonload.
 *"----------------------------------------------------------------------
 *"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(IV_JSON) TYPE  STRING
-*"     VALUE(IV_VERSION) TYPE  ZDDD_HR_PA_E_ZVERSION DEFAULT 'SAP'
+*"     VALUE(IV_VERSION) TYPE  ZXXX_HR_PA_E_ZVERSION DEFAULT 'SAP'
 *"     VALUE(IV_MOLGA) TYPE  VIEKN DEFAULT '28'
 *"  EXPORTING
 *"     VALUE(EV_JSON) TYPE  STRING
@@ -18,9 +18,9 @@ FUNCTION zDDD_hr_pafm_dataonload.
   DATA lv_msgty TYPE msgty.
   DATA:lv_msgtx TYPE msgtx.
   TYPES: BEGIN OF ts_s_data,
-           guid TYPE zDDD_hr_pa_e_guid.
+           guid TYPE zXXX_hr_pa_e_guid.
   TYPES:
-   ztable TYPE zDDD_hr_pa_tab_data.
+   ztable TYPE zXXX_hr_pa_tab_data.
   TYPES:       END OF ts_s_data.
 
   TYPES:tt_s_data TYPE STANDARD TABLE OF ts_s_data.
@@ -32,13 +32,13 @@ FUNCTION zDDD_hr_pafm_dataonload.
   DATA:lt_prelp TYPE TABLE OF prelp.
   DATA:lt_prelpnew TYPE TABLE OF prelp.
   DATA:lt_prelpout TYPE TABLE OF prelp.
-  DATA:lt_message TYPE zDDD_hr_pa_tab_message.
+  DATA:lt_message TYPE zXXX_hr_pa_tab_message.
 
   DATA:lt_data TYPE  tt_s_data.
   DATA:lv_flag TYPE flag.
-  DATA:lt_return TYPE zDDD_hr_pa_tab_return.
-  DATA:lt_tplog TYPE TABLE OF zDDD_hr_pa_tplog.
-  DATA:lt_zDDD_hr_pa_tab_message TYPE zDDD_hr_pa_tab_message.
+  DATA:lt_return TYPE zXXX_hr_pa_tab_return.
+  DATA:lt_tplog TYPE TABLE OF zXXX_hr_pa_tplog.
+  DATA:lt_zXXX_hr_pa_tab_message TYPE zXXX_hr_pa_tab_message.
   CALL METHOD /ui2/cl_json=>deserialize
     EXPORTING
       json = iv_json
@@ -53,7 +53,7 @@ FUNCTION zDDD_hr_pafm_dataonload.
          guid,
          msgty,
          msgtx
-     FROM zDDD_hr_pa_tplog
+     FROM zXXX_hr_pa_tplog
      INTO TABLE @DATA(lt_tplogfind)
      FOR ALL ENTRIES IN @lt_data
      WHERE guid = @lt_data-guid.
@@ -123,7 +123,7 @@ FUNCTION zDDD_hr_pafm_dataonload.
   ENDLOOP.
 
   IF lt_tplog IS NOT INITIAL.
-    MODIFY zDDD_hr_pa_tplog FROM TABLE lt_tplog.
+    MODIFY zXXX_hr_pa_tplog FROM TABLE lt_tplog.
     IF sy-subrc = 0.
       COMMIT WORK AND WAIT.
     ELSE.
@@ -142,7 +142,7 @@ FUNCTION zDDD_hr_pafm_dataonload.
     znsapfield,
     znsapvalue
     FROM
-    zDDD_hr_pa_tpint
+    zXXX_hr_pa_tpint
     INTO TABLE @DATA(lt_tpint)
     WHERE infty      <> '' AND
           znsapfield <> '' AND
@@ -162,7 +162,7 @@ FUNCTION zDDD_hr_pafm_dataonload.
 *      One type of information to get once
       CLEAR:lt_message.
 
-      CALL FUNCTION 'ZDDD_HR_PAFM_DATATOPRELP'
+      CALL FUNCTION 'ZXXX_HR_PAFM_DATATOPRELP'
         EXPORTING
           iv_infty   = <ls_ztable>-infty
           iv_data    = <ls_ztable>-data
@@ -468,7 +468,7 @@ FUNCTION zDDD_hr_pafm_dataonload.
         infty,
         zversion,
         flag
-      FROM zDDD_hr_pa_tpinf
+      FROM zXXX_hr_pa_tpinf
         WHERE zversion = @iv_version
           AND flag <> ''
       INTO TABLE @DATA(lt_tpinf).
