@@ -1,7 +1,7 @@
 # saphcmhire
 sap hr hire
 SAP HR global best practices with pa module interface
-![image](https://github.com/XW-bmw/saphcmhire/assets/29417134/8ddeab03-b6ca-4c5d-8d5c-2b428951c672)
+![image](https://github.com/user-attachments/assets/0f536775-4960-4a6d-8d10-4a02df095c40)
 Introduction:
 Other systems write to the SAP PA system, which is first divided into onboarding, and then the operation of the information type
  
