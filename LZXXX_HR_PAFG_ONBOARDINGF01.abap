@@ -1,5 +1,5 @@
 *----------------------------------------------------------------------*
-***INCLUDE LZDDD_HR_PAFG_ONBOARDINGF01.
+***INCLUDE LZXXX_HR_PAFG_ONBOARDINGF01.
 *----------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
 *&      Form  FRM_CHECK_DATA
@@ -14,16 +14,16 @@ FORM frm_check_data  TABLES   it_sapitab
                               it_sapfind
                      USING    iv_infty TYPE infty
                               iv_molga TYPE viekn
-                              iv_version TYPE zDDD_hr_pa_e_zversion
+                              iv_version TYPE zXXX_hr_pa_e_zversion
                      CHANGING
-                               ct_message TYPE zDDD_hr_pa_tab_message.
+                               ct_message TYPE zXXX_hr_pa_tab_message.
   DATA:lv_shu TYPE i.
   DATA:lr_table TYPE REF TO data.
   DATA:lr_wa    TYPE REF TO data.
   DATA:lv_text      TYPE string.
   DATA:lv_zz        TYPE string.
   DATA:lr_descr    TYPE REF TO cl_abap_structdescr.
-  DATA:lt_tpint TYPE TABLE OF zDDD_hr_pa_tpint.
+  DATA:lt_tpint TYPE TABLE OF zXXX_hr_pa_tpint.
   FIELD-SYMBOLS:<ls_wa> TYPE any.
   CREATE DATA lr_wa LIKE LINE OF it_sapitab.
   ASSIGN lr_wa->* TO <ls_wa>.
@@ -75,7 +75,7 @@ FORM frm_check_data  TABLES   it_sapitab
     fnsource,
     sntarget
   INTO TABLE @DATA(lt_tbmove)
-    FROM zDDD_hr_pa_move
+    FROM zXXX_hr_pa_move
     WHERE infty = @iv_infty
       AND zversion = @iv_version.
   SORT lt_tbmove BY znumber.
@@ -272,10 +272,10 @@ ENDFORM.
 *      -->P_<LS_DATA>_GUID  text
 *      -->P_ENDIF  text
 *----------------------------------------------------------------------*
-FORM frm_update_return  TABLES   it_message TYPE zDDD_hr_pa_tab_message
-                                 it_return  TYPE zDDD_hr_pa_tab_return
+FORM frm_update_return  TABLES   it_message TYPE zXXX_hr_pa_tab_message
+                                 it_return  TYPE zXXX_hr_pa_tab_return
                         USING    pv_infty  TYPE infty
-                                 pv_guid  TYPE zDDD_hr_pa_e_guid.
+                                 pv_guid  TYPE zXXX_hr_pa_e_guid.
 
   APPEND INITIAL LINE TO it_return ASSIGNING FIELD-SYMBOL(<ls_return>).
   <ls_return>-guid   = pv_guid.
@@ -291,7 +291,7 @@ ENDFORM.
 *----------------------------------------------------------------------*
 FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
                               USING    pv_infty TYPE infty
-                              CHANGING ct_message TYPE zDDD_hr_pa_tab_message.
+                              CHANGING ct_message TYPE zXXX_hr_pa_tab_message.
   READ TABLE it_sapitab ASSIGNING FIELD-SYMBOL(<ls_p0001>) INDEX 1.
   IF sy-subrc = 0.
     CHECK <ls_p0001> IS ASSIGNED.
@@ -304,7 +304,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
 
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_p0001>-plans AND
               znsapfield <> ''.
@@ -337,7 +337,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
 
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -363,7 +363,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
       <ls_message>-fieldname = 'ORGEH'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -377,7 +377,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
 *      <ls_message>-fieldname = 'ORGEH'.
 *      SELECT SINGLE znsapfield
 *        INTO <ls_message>-znsapfield
-*        FROM zDDD_hr_pa_tpint
+*        FROM zXXX_hr_pa_tpint
 *        WHERE infty      = pv_infty AND
 *              fieldname  = <ls_p0001>-orgeh AND
 *              znsapfield <> ''.
@@ -403,7 +403,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
       <ls_message>-fieldname = 'STELL'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -429,7 +429,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
       <ls_message>-fieldname = 'KOSTL'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -464,7 +464,7 @@ FORM frm_check_postion_valid  TABLES   it_sapitab TYPE tt_p0001
       <ls_message>-fieldname = 'BUKRS'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -485,7 +485,7 @@ ENDFORM.
 *----------------------------------------------------------------------*
 FORM frm_check_massn_massg  TABLES   it_sapitab TYPE tt_p0000
                               USING    pv_infty TYPE infty
-                            CHANGING ct_message TYPE zDDD_hr_pa_tab_message.
+                            CHANGING ct_message TYPE zXXX_hr_pa_tab_message.
 
   READ TABLE it_sapitab ASSIGNING FIELD-SYMBOL(<ls_p0000>) INDEX 1.
   IF sy-subrc = 0.
@@ -497,7 +497,7 @@ FORM frm_check_massn_massg  TABLES   it_sapitab TYPE tt_p0000
       <ls_message>-fieldname = 'MASSN'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -512,7 +512,7 @@ FORM frm_check_massn_massg  TABLES   it_sapitab TYPE tt_p0000
       <ls_message>-fieldname = 'MASSG'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -529,7 +529,7 @@ FORM frm_check_massn_massg  TABLES   it_sapitab TYPE tt_p0000
       <ls_message>-fieldname = 'BEGDA'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -546,7 +546,7 @@ FORM frm_check_massn_massg  TABLES   it_sapitab TYPE tt_p0000
       <ls_message>-fieldname = 'PERNR'.
       SELECT SINGLE znsapfield
         INTO <ls_message>-znsapfield
-        FROM zDDD_hr_pa_tpint
+        FROM zXXX_hr_pa_tpint
         WHERE infty      = pv_infty AND
               fieldname  = <ls_message>-fieldname AND
               znsapfield <> ''.
@@ -582,7 +582,7 @@ FORM frm_update_pnnnn  USING   iv_molga TYPE viekn
               INTO   lv_classname   "Server Group Name
              WHERE   applserver = lv_applserver
                AND   grouptype = 'S'.   "S:服务器组，空:登陆组
-  CALL FUNCTION 'ZDDD_HR_PAFM_PANNNN_UP' STARTING NEW TASK 'PANNNN'
+  CALL FUNCTION 'ZXXX_HR_PAFM_PANNNN_UP' STARTING NEW TASK 'PANNNN'
     DESTINATION IN GROUP lv_classname
     EXPORTING
       is_prelp = ps_prelp
@@ -596,8 +596,8 @@ ENDFORM.
 *      -->P_GT_RETURN  text
 *      -->P_<LS_DATA>_GUID  text
 *----------------------------------------------------------------------*
-FORM frm_update_log  TABLES   it_return TYPE zDDD_hr_pa_tab_return
-                     USING    pv_guid TYPE zDDD_hr_pa_e_guid
+FORM frm_update_log  TABLES   it_return TYPE zXXX_hr_pa_tab_return
+                     USING    pv_guid TYPE zXXX_hr_pa_e_guid
                               iv_msgty TYPE msgty
                               iv_msgtx TYPE msgtx.
 
@@ -629,7 +629,7 @@ FORM frm_update_log  TABLES   it_return TYPE zDDD_hr_pa_tab_return
       lv_message = lr_invalid_type->get_text( ).
   ENDTRY.
 
-  UPDATE zDDD_hr_pa_tplog SET msgty  = iv_msgty
+  UPDATE zXXX_hr_pa_tplog SET msgty  = iv_msgty
                               msgtx  = iv_msgtx
                               returendata = lv_dataxstring
                         WHERE guid = pv_guid.
