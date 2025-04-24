@@ -33,6 +33,10 @@ Step 1 Onboarding  The underlying configuration definition
 
 
 
+Main function:
+Begin with  zXXX_hr_pafg_onboarding.
+
+
 
 This ABAP code represents a highly complex HR data integration solution that has been verified in a production environment for a year, demonstrating excellent stability and functionality. The following is an in - depth analysis from the perspectives of functionality, advantages, architectural concepts, and its impact on ABAP development: 
  
