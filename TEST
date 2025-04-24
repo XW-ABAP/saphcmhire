@@ -9,7 +9,7 @@ FUNCTION ztest_fm_0004.
 *"     REFERENCE(IT_P0007) TYPE  P0007_TAB OPTIONAL
 *"     REFERENCE(IT_P0009) TYPE  P0009_TAB OPTIONAL
 *"     REFERENCE(IT_P0016) TYPE  P0016_TAB OPTIONAL
-*"     REFERENCE(IT_P0021) TYPE  ZBBB_HR_TAB_P0021 OPTIONAL
+*"     REFERENCE(IT_P0021) TYPE  ZXXX_HR_TAB_P0021 OPTIONAL
 *"     REFERENCE(IT_P0022) TYPE  P12_P0022_TAB OPTIONAL
 *"     REFERENCE(IT_P0023) TYPE  P0023_TAB OPTIONAL
 *"     REFERENCE(IT_P0041) TYPE  P0041_TAB OPTIONAL
@@ -22,9 +22,9 @@ FUNCTION ztest_fm_0004.
 
 
   TYPES: BEGIN OF ts_s_data,
-           guid TYPE zBBB_hr_pa_e_guid.
+           guid TYPE zXXX_hr_pa_e_guid.
   TYPES:
-   ztable TYPE zBBB_hr_pa_tab_data.
+   ztable TYPE zXXX_hr_pa_tab_data.
   TYPES:       END OF ts_s_data.
   TYPES:tt_s_data TYPE TABLE OF ts_s_data.
   DATA:lv_json       TYPE string,
@@ -202,14 +202,14 @@ FUNCTION ztest_fm_0004.
       RECEIVING
         r_json = lv_json.
     IF iv_flag = 'X'.
-      CALL FUNCTION 'ZBBB_HR_PAFM_DATAONLOAD' DESTINATION 'BHI'
+      CALL FUNCTION 'ZXXX_HR_PAFM_DATAONLOAD' DESTINATION 'BHI'
         EXPORTING
           iv_json    = lv_json
           iv_version = 'SAP'
         IMPORTING
           ev_json    = lv_jsonreturn.
     ELSE.
-      CALL FUNCTION 'ZBBB_HR_PAFM_DATAONLOAD'
+      CALL FUNCTION 'ZXXX_HR_PAFM_DATAONLOAD'
         EXPORTING
           iv_json    = lv_json
           iv_version = 'SAP'
@@ -226,25 +226,3 @@ FUNCTION ztest_fm_0004.
   ENDIF.
 
 ENDFUNCTION.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
