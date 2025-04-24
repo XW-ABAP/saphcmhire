@@ -20,7 +20,8 @@ Programming schemes：
 Step 1 Onboarding  The underlying configuration definition
   1A : Open sy-tcode  se11 create Transparent Table Z_XXXXX table  Undertake the type and version of the information  and se11 crate Maintenance View z_xxxxxx
 
-![image](https://github.com/XW-bmw/saphcmhire/assets/29417134/88be00fc-f2a7-4a76-ae6e-dfc39ed3edb7)
+![image](https://github.com/user-attachments/assets/0b7b3219-5f56-425e-b0dc-083347ef798f)
+
 
 
 
