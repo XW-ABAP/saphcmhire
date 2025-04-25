@@ -149,5 +149,7 @@ I can devlopment abap for food.
 
 BTC: bc1pghhu6fe239yt3pd2lxyc4zxm4ew7xc3r8kaj9esqsgv9c0lxzjaq8eqrzf
 
+ETC: 0x8d41545777832ef253Bdfa967e07e5DCBcfe47da
+
 IF you use this code when you get some error need to reslove,call me.
 
