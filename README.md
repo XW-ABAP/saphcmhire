@@ -145,7 +145,7 @@ For developers, it not only provides a technical implementation reference but al
 
 
 
-I can devlopment abap for food.
+I can develop abap for food.
 
 BTC: bc1pghhu6fe239yt3pd2lxyc4zxm4ew7xc3r8kaj9esqsgv9c0lxzjaq8eqrzf
 
